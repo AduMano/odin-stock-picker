@@ -14,7 +14,7 @@ Quick Tips:
 
 
 ## USAGE
-  - Enter **stock_picker(stock_prices: Array)
+  - Enter **stock_picker(stock_prices: Array)**
     - stock_prices = This is where you put the list of stock prices
 
 ## TEST CASES
