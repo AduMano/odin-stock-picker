@@ -1,0 +1,88 @@
+Each element inside the array represents the price on that day, day starts at 0.
+I have to buy first before selling.
+I have to buy the lowest price and sell it on highest price 
+But this is a sequential task, each day is important, once passes, I lose opportunity.
+But by getting the index of Buy or Bought in [Buy, Sell] array output, Selling is the most easiest process
+
+I have to analyze the elements (or days with price) first by doing in human way.
+
+Ex Array: [17,3,6,9,15,8,6,1,10]
+Expected Output: [1, 4] (Have to return the index, arr[0] = Day to Buy | arr[1] = Day to Sell)
+
+I have this process:
+[17,3,6,9,15,8,6,1,10]
+
+get_potential_days (array):
+
+  index = []; // [1, 7] Potential Candidates
+
+  // Loop simulation using #each_cons(2) methods:
+  is 17 > 3 ? Yes, is 3 > price ? No, index.push(arr.find_index(3)) // [1]
+  is 3 > 6 ? No
+  is 6 > 9 ? No
+  is 15 > 8 ? Yes, is 8 > price ? Yes
+  is 8 > 6 ? Yes, is 6 > price ? yes
+  is 6 > 1 ? Yes, is 1 > price ? No, index.push(arr.find_index(1)) // [1, 7]
+  is 1 > 10 ? No
+
+  return index
+
+
+get_sell_and_profit (array, index):
+  // I would slice the array to this: [index .. -1] // So i could start iterating starting with the index
+  // Get the index of the max number and subtract them with the original array index to the max index
+  // By getting the max, means I got the sell on that way.
+  max_number = [index .. -1].max
+  
+  // Return the Profit and the index of buy and sell
+  return {
+    profit: max_number - array[index],
+    buy_index: index,
+    sell_index: array.find_index(max_number)
+  }
+
+
+stock_picker (array):
+  // Get the potential days:
+  potential_buying_days = get_potential_days(array);
+
+  // Loop through potential_buying_days, then get the potential sell days and profit
+  profits_of_potential_days = potential_buying_days.map do |days_index|
+    get_sell_and_profit(array, days_index)
+  end
+
+  // Now that we got the profits of potential days, we will compare on which one of
+  // them has the most profit value, and return that one value.
+  // What enumerable i should use? since we will check one by one and return only 1 hash,
+  // I will be using #reduce method.
+  result = profits_of_potential_days.reduce do |selected_profit, potential_day| 
+    unless (selected_profit[:profit] > potential_day[:profit])
+      selected_profit = potential_day
+    end
+  end
+
+  // Use the has and make a new array containing with the buy and sell indexes.
+  return [result[:buy_index], result[:sell_index]]
+
+
+===============================================================================================
+// My other method but nah HAHAHA
+
+- Using #filter_map method, i could achieve of returning a new array with the elementds
+  depending on the condition set in the block.
+
+- Using #find_index method, i could use this as a return basis on the new array thats been
+  created in #filter-map method.
+
+But how could I know which is which? which is low and which is high sequentially?
+What I think is I have to Iterate again inside the current iteration.
+What enumerables I could use to find out which is which? Im thinking of #reduce method.
+
+ - Using #reduce method, I could get the index on what day I should buy
+   (Condition: The Previous Element or left must be low)
+
+ - Using the returned index, I have to use #reduce method again but I have to start 
+
+arr.filter_map do | price | 
+  arr.find_index(price) if (Condition...)
+end
