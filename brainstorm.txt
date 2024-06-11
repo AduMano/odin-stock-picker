@@ -33,7 +33,7 @@ get_sell_and_profit (array, index):
   // I would slice the array to this: [index .. -1] // So i could start iterating starting with the index
   // Get the index of the max number and subtract them with the original array index to the max index
   // By getting the max, means I got the sell on that way.
-  max_number = [index .. -1].max
+  max_number = array[index .. -1].max
   
   // Return the Profit and the index of buy and sell
   return {
